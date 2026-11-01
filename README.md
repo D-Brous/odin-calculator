@@ -1,0 +1,1 @@
+This is a project as part of The Odin Project to practice html, css and javascript skills by creating an interactive calculator website.
