@@ -1,0 +1,96 @@
+:root {
+  /* Control variables */
+  --calculator-color: rgb(72, 72, 72);
+  --number-and-point-button-color: rgb(184, 184, 184);
+  --operator-and-equals-button-color: rgb(158, 85, 206);
+  --backspace-and-clear-button-color: rgb(156, 56, 56);
+  --button-container-margin: 20px;
+  --calculator-width-to-height-ratio: 0.7;
+  --calculator-padding-to-height-ratio: 0.05;
+  --calculator-height: 100vh;
+  --display-to-button-container-height-ratio: 0.25;
+  --horizontal-button-gap-percent: 5%;
+  --vertical-display-button-container-gap-percent: 5%;
+  
+
+  /* Calculated variables */
+  --calculator-width: calc(var(--calculator-width-to-height-ratio) * var(--calculator-height));
+  --calculator-padding: calc(var(--calculator-padding-to-height-ratio) * var(--calculator-height));
+  --display-basis: calc(var(--display-to-button-container-height-ratio) * (100% - var(--vertical-display-button-container-gap-percent)));
+  --button-container-basis: calc(100% - var(--display-basis) - var(--vertical-display-button-container-gap-percent));
+  --vertical-button-gap-percent: calc(var(--horizontal-button-gap-percent) * (var(--calculator-width-to-height-ratio) - 2 * var(--calculator-padding-to-height-ratio)));
+  --number-button-basis: calc((100% - 3 * var(--horizontal-button-gap-percent)) / 4);
+  --backspace-and-clear-button-basis: calc((100% - 2 * var(--horizontal-button-gap-percent) - var(--number-button-basis)) / 2);
+  --equals-button-basis: calc(100% - 2 * var(--horizontal-button-gap-percent) - 2 * var(--number-button-basis));
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
+#calculator {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: var(--calculator-width);
+  height: var(--calculator-height);
+  padding: var(--calculator-padding);
+  background-color: var(--calculator-color);
+  border-radius: 10px;
+}
+
+#display {
+  flex-basis: var(--display-basis);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  border: 2px, black;
+  border-radius: 2px;
+  background-color: rgb(176, 192, 151);
+  font-size: 70px;
+  text-align: bottom, right;
+}
+
+#button-container {
+  flex-basis: var(--button-container-basis);
+  display: flex;
+  flex-direction: column;
+  gap: var(--vertical-button-gap-percent);
+}
+
+#button-row-1, #button-row-2, #button-row-3, #button-row-4, #button-row-5 {
+  flex: 1;
+  display: flex;
+  gap: var(--horizontal-button-gap-percent);
+  justify-content: space-around;
+}
+
+button {
+  flex-basis: var(--number-button-basis);
+  box-sizing: border-box;
+  font-size: 30px;
+}
+
+#backspace, #clear {
+  flex-basis: var(--backspace-and-clear-button-basis);
+}
+
+#equals {
+  flex-basis: var(--equals-button-basis);
+}
+
+#zero, #one, #two, #three, #four, #five, #six, #seven, #eight, #nine, #point {
+  background-color: var(--number-and-point-button-color);
+}
+
+#add, #subtract, #multiply, #divide, #equals {
+  background-color: var(--operator-and-equals-button-color);
+}
+
+#backspace, #clear {
+  background-color: var(--backspace-and-clear-button-color);
+}
