@@ -1,3 +1,5 @@
+const MAX_DISPLAY_DECIMAL_PLACES = 4;
+
 const add = (a, b) => a + b;
 const subtract = (a, b) => a - b;
 const multiply = (a, b) => a * b;
@@ -16,6 +18,20 @@ function operate(operator, a, b) {
     default:
       throw new Error(`invalid operator: ${operator}`);
   }
+}
+
+function getRoundedString(number) {
+  if (Number.isInteger(number)) {
+    return String(number);
+  }
+  // const partials = String(number).split('.');
+  // const integerString = partials[0];
+  // const decimalString = partials[1];
+  const numDecimalPlaces = String(number).split('.')[1].length;
+  if (numDecimalPlaces <= MAX_DISPLAY_DECIMAL_PLACES) {
+    return String(number);
+  }
+  return number.toFixed(MAX_DISPLAY_DECIMAL_PLACES);
 }
 
 let firstNumber = 0;
@@ -112,7 +128,7 @@ const handleEqualsClick = (_) => {
       operator == "";
       return;
     }
-    display.textContent = String(operate(operator, firstNumber, secondNumber));
+    display.textContent = getRoundedString(operate(operator, firstNumber, secondNumber));
     operator = "";
     resetDisplayOnNextDigitOrDecimalPoint = true;
   }
