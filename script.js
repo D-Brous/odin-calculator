@@ -67,6 +67,10 @@ function handlePositiveDigitClick(digitString) {
   }
 }
 
+function handlePositiveDigitKeyPress(digitString) {
+  return (_)
+}
+
 const handleZeroDigitClick = (_) => {
   if (display.textContent == "NaN") {
     return;
@@ -134,15 +138,25 @@ const handleEqualsClick = (_) => {
   }
 }
 
-document.querySelector("#one").addEventListener('click', handlePositiveDigitClick("1"));
-document.querySelector("#two").addEventListener('click', handlePositiveDigitClick("2"));
-document.querySelector("#three").addEventListener('click', handlePositiveDigitClick("3"));
-document.querySelector("#four").addEventListener('click', handlePositiveDigitClick("4"));
-document.querySelector("#five").addEventListener('click', handlePositiveDigitClick("5"));
-document.querySelector("#six").addEventListener('click', handlePositiveDigitClick("6"));
-document.querySelector("#seven").addEventListener('click', handlePositiveDigitClick("7"));
-document.querySelector("#eight").addEventListener('click', handlePositiveDigitClick("8"));
-document.querySelector("#nine").addEventListener('click', handlePositiveDigitClick("9"));
+
+// Set up button click event listeners
+
+const positiveDigitStringToElementId = {
+  "1": "#one",
+  "2": "#two",
+  "3": "#three",
+  "4": "#four",
+  "5": "#five",
+  "6": "#six",
+  "7": "#seven",
+  "8": "#eight",
+  "9": "#nine",
+}
+
+for (const [digitString, elementID] of Object.entries(positiveDigitStringToElementId)) {
+  document.querySelector(elementID).addEventListener('click', handlePositiveDigitClick(digitString));
+}
+
 document.querySelector("#zero").addEventListener('click', handleZeroDigitClick);
 
 document.querySelector("#clear").addEventListener('click', handleClearClick);
@@ -156,3 +170,24 @@ document.querySelector("#divide").addEventListener('click', handleOperatorClick(
 document.querySelector("#equals").addEventListener('click', handleEqualsClick);
 
 document.querySelector("#point").addEventListener('click', handleDecimalPointClick);
+
+
+// Set up key press event listeners
+
+const keyStringToElementId = {
+  ...positiveDigitStringToElementId,
+  "0": "#zero",
+  "+": "#add",
+  "-": "#subtract",
+  "*": "#multiply",
+  "/": "#divide",
+  "=": "#equals",
+  ".": "#point",
+  "Backspace": "#backspace",
+}
+
+document.addEventListener('keydown', (event) => {
+  if (event.key in keyStringToElementId) {
+    document.querySelector(keyStringToElementId[event.key]).click();
+  }
+})
