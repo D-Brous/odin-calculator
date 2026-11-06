@@ -42,12 +42,6 @@ let hasDecimalPoint = false;
 
 const display = document.querySelector("#display");
 
-function appendDigit(currentNumberString, digitString) {
-  if (currentNumberString === "0" && digitString === "0") {
-    return "0"
-  }
-  return currentNumberString + digitString
-}
 
 function handlePositiveDigitClick(digitString) {
   return (_) => {
@@ -57,6 +51,7 @@ function handlePositiveDigitClick(digitString) {
     if (resetDisplayOnNextDigitOrDecimalPoint) {
       display.textContent = digitString;
       resetDisplayOnNextDigitOrDecimalPoint = false;
+      hasDecimalPoint = false;
       return;
     }
     if (display.textContent == "0") {
@@ -67,10 +62,6 @@ function handlePositiveDigitClick(digitString) {
   }
 }
 
-function handlePositiveDigitKeyPress(digitString) {
-  return (_)
-}
-
 const handleZeroDigitClick = (_) => {
   if (display.textContent == "NaN") {
     return;
@@ -78,6 +69,7 @@ const handleZeroDigitClick = (_) => {
   if (resetDisplayOnNextDigitOrDecimalPoint) {
     display.textContent = "0";
     resetDisplayOnNextDigitOrDecimalPoint = false;
+    hasDecimalPoint = false;
     return;
   }
   if (display.textContent == "0") {
@@ -88,6 +80,7 @@ const handleZeroDigitClick = (_) => {
 
 const handleClearClick = (_) => {
   display.textContent = "0";
+  hasDecimalPoint = false;
   operator = "";
 }
 
@@ -95,11 +88,13 @@ const handleDecimalPointClick = (_) => {
   if (resetDisplayOnNextDigitOrDecimalPoint) {
     display.textContent = "0."
     resetDisplayOnNextDigitOrDecimalPoint = false;
+    hasDecimalPoint = true;
     return;
   }
   if (hasDecimalPoint) {
     return;
   }
+  hasDecimalPoint = true;
   display.textContent += ".";
 }
 
@@ -107,6 +102,9 @@ const handleBackspaceClick = (_) => {
   if (display.textContent.length == 1) {
     display.textContent = "0";
   } else {
+    if (display.textContent.at(-1) == ".") {
+      hasDecimalPoint = false;
+    }
     display.textContent = display.textContent.slice(0, -1);
   }
 }
@@ -129,12 +127,14 @@ const handleEqualsClick = (_) => {
     if (operator == "/" && secondNumber == 0) {
       display.textContent = "NaN";
       resetDisplayOnNextDigitOrDecimalPoint = true;
+      hasDecimalPoint = false;
       operator == "";
       return;
     }
     display.textContent = getRoundedString(operate(operator, firstNumber, secondNumber));
     operator = "";
     resetDisplayOnNextDigitOrDecimalPoint = true;
+    hasDecimalPoint = display.textContent.includes('.');
   }
 }
 
