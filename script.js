@@ -37,7 +37,8 @@ function getRoundedString(number) {
 let firstNumber = 0;
 let secondNumber = 0;
 let operator = "";
-let resetDisplayOnNextDigitOrDecimalPoint = false;
+let lastButtonPressWasOperator = false;
+let lastButtonPressWasEquals = false;
 let hasDecimalPoint = false;
 
 const display = document.querySelector("#display");
@@ -48,9 +49,13 @@ function handlePositiveDigitClick(digitString) {
     if (display.textContent == "NaN") {
       return;
     }
-    if (resetDisplayOnNextDigitOrDecimalPoint) {
+    if (lastButtonPressWasEquals) {
+      operator = "";
+    }
+    if (lastButtonPressWasEquals || lastButtonPressWasOperator) {
       display.textContent = digitString;
-      resetDisplayOnNextDigitOrDecimalPoint = false;
+      lastButtonPressWasEquals = false;
+      lastButtonPressWasOperator = false;
       hasDecimalPoint = false;
       return;
     }
@@ -66,9 +71,13 @@ const handleZeroDigitClick = (_) => {
   if (display.textContent == "NaN") {
     return;
   }
-  if (resetDisplayOnNextDigitOrDecimalPoint) {
+  if (lastButtonPressWasEquals) {
+    operator = "";
+  }
+  if (lastButtonPressWasEquals || lastButtonPressWasOperator) {
     display.textContent = "0";
-    resetDisplayOnNextDigitOrDecimalPoint = false;
+    lastButtonPressWasEquals = false;
+    lastButtonPressWasOperator = false;
     hasDecimalPoint = false;
     return;
   }
@@ -81,13 +90,22 @@ const handleZeroDigitClick = (_) => {
 const handleClearClick = (_) => {
   display.textContent = "0";
   hasDecimalPoint = false;
+  lastButtonPressWasEquals = false;
+  lastButtonPressWasOperator = false;
   operator = "";
 }
 
 const handleDecimalPointClick = (_) => {
-  if (resetDisplayOnNextDigitOrDecimalPoint) {
-    display.textContent = "0."
-    resetDisplayOnNextDigitOrDecimalPoint = false;
+  if (display.textContent == "NaN") {
+    return
+  }
+  if (lastButtonPressWasEquals) {
+    operator = "";
+  }
+  if (lastButtonPressWasEquals || lastButtonPressWasOperator) {
+    display.textContent = "0.";
+    lastButtonPressWasEquals = false;
+    lastButtonPressWasOperator = false;
     hasDecimalPoint = true;
     return;
   }
@@ -99,6 +117,8 @@ const handleDecimalPointClick = (_) => {
 }
 
 const handleBackspaceClick = (_) => {
+  lastButtonPressWasEquals = false;
+  lastButtonPressWasOperator = false;
   if (display.textContent.length == 1) {
     display.textContent = "0";
   } else {
@@ -111,29 +131,63 @@ const handleBackspaceClick = (_) => {
 
 function handleOperatorClick(operatorString) {
   return (_) => {
-    if (operator.length > 0) {
-      display.textContent = "NaN";
-    } else {
+    if (lastButtonPressWasOperator) {
+      operator = operatorString;
+      return;
+    }
+    lastButtonPressWasOperator = true;
+    if (lastButtonPressWasEquals) {
       firstNumber = Number(display.textContent);
       operator = operatorString;
-      resetDisplayOnNextDigitOrDecimalPoint = true;
+      lastButtonPressWasEquals = false;
+      return;
     }
+    if (operator.length > 0) {
+      secondNumber = Number(display.textContent);
+      if (operator == '/' && secondNumber == 0) {
+        display.textContent = "NaN";
+        hasDecimalPoint = false;
+        operator == "";
+        return;
+      }
+      display.textContent = getRoundedString(operate(operator, firstNumber, secondNumber));
+      hasDecimalPoint = display.textContent.includes('.');
+    }
+    firstNumber = Number(display.textContent);
+    operator = operatorString;
   }
 }
 
 const handleEqualsClick = (_) => {
-  if (operator.length > 0) {
-    secondNumber = Number(display.textContent);
+  if (operator.length == 0) {
+    return
+  } else if (lastButtonPressWasOperator) {
+    lastButtonPressWasEquals = true;
+    lastButtonPressWasOperator = false;
+    secondNumber = firstNumber
     if (operator == "/" && secondNumber == 0) {
       display.textContent = "NaN";
-      resetDisplayOnNextDigitOrDecimalPoint = true;
       hasDecimalPoint = false;
       operator == "";
       return;
     }
     display.textContent = getRoundedString(operate(operator, firstNumber, secondNumber));
-    operator = "";
-    resetDisplayOnNextDigitOrDecimalPoint = true;
+    hasDecimalPoint = display.textContent.includes('.');
+    firstNumber = Number(display.textContent);
+  } else if (lastButtonPressWasEquals) {
+    firstNumber = Number(display.textContent);
+    display.textContent = getRoundedString(operate(operator, firstNumber, secondNumber));
+    hasDecimalPoint = display.textContent.includes('.')
+  } else {
+    lastButtonPressWasEquals = true;
+    secondNumber = Number(display.textContent);
+    if (operator == "/" && secondNumber == 0) {
+      display.textContent = "NaN";
+      hasDecimalPoint = false;
+      operator == "";
+      return;
+    }
+    display.textContent = getRoundedString(operate(operator, firstNumber, secondNumber));
     hasDecimalPoint = display.textContent.includes('.');
   }
 }
