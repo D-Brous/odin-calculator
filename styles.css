@@ -2,13 +2,13 @@
   /* Control variables */
   --calculator-color: rgb(72, 72, 72);
   --number-and-point-button-color: rgb(184, 184, 184);
-  --operator-and-equals-button-color: rgb(158, 85, 206);
-  --backspace-and-clear-button-color: rgb(156, 56, 56);
+  --operator-and-equals-button-color: rgb(140, 64, 191);
+  --backspace-and-clear-button-color: rgb(146, 42, 42);
   --button-container-margin: 20px;
   --calculator-width-to-height-ratio: 0.7;
   --calculator-padding-to-height-ratio: 0.05;
   --calculator-height: 100vh;
-  --display-to-button-container-height-ratio: 0.25;
+  --display-to-button-container-height-ratio: 0.15;
   --horizontal-button-gap-percent: 5%;
   --vertical-display-button-container-gap-percent: 5%;
   
@@ -40,6 +40,7 @@ body {
   padding: var(--calculator-padding);
   background-color: var(--calculator-color);
   border-radius: 10px;
+  border: 5px, rgb(58, 58, 58), solid;
 }
 
 #display {
@@ -47,12 +48,12 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  align-items: flex-start;
-  border: 2px, black;
+  align-items: flex-end;
+  border: 4px, rgb(146, 159, 125), solid;
   border-radius: 2px;
   background-color: rgb(176, 192, 151);
-  font-size: 70px;
-  text-align: bottom, right;
+  font-size: 75px;
+  font-family: monospace;
 }
 
 #button-container {
@@ -73,6 +74,8 @@ button {
   flex-basis: var(--number-button-basis);
   box-sizing: border-box;
   font-size: 30px;
+  font-family: monospace;
+  border-radius: 6px;
 }
 
 #backspace, #clear {
