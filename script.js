@@ -129,6 +129,17 @@ const handleBackspaceClick = (_) => {
   }
 }
 
+function evaluateOperation() {
+  if (operator == "/" && secondNumber == 0) {
+    display.textContent = "NaN";
+    hasDecimalPoint = false;
+    operator == "";
+    return;
+  }
+  display.textContent = getRoundedString(operate(operator, firstNumber, secondNumber));
+  hasDecimalPoint = display.textContent.includes('.');
+}
+
 function handleOperatorClick(operatorString) {
   return (_) => {
     if (lastButtonPressWasOperator) {
@@ -144,14 +155,7 @@ function handleOperatorClick(operatorString) {
     }
     if (operator.length > 0) {
       secondNumber = Number(display.textContent);
-      if (operator == '/' && secondNumber == 0) {
-        display.textContent = "NaN";
-        hasDecimalPoint = false;
-        operator == "";
-        return;
-      }
-      display.textContent = getRoundedString(operate(operator, firstNumber, secondNumber));
-      hasDecimalPoint = display.textContent.includes('.');
+      evaluateOperation();
     }
     firstNumber = Number(display.textContent);
     operator = operatorString;
@@ -165,14 +169,7 @@ const handleEqualsClick = (_) => {
     lastButtonPressWasEquals = true;
     lastButtonPressWasOperator = false;
     secondNumber = firstNumber
-    if (operator == "/" && secondNumber == 0) {
-      display.textContent = "NaN";
-      hasDecimalPoint = false;
-      operator == "";
-      return;
-    }
-    display.textContent = getRoundedString(operate(operator, firstNumber, secondNumber));
-    hasDecimalPoint = display.textContent.includes('.');
+    evaluateOperation();
     firstNumber = Number(display.textContent);
   } else if (lastButtonPressWasEquals) {
     firstNumber = Number(display.textContent);
@@ -181,14 +178,7 @@ const handleEqualsClick = (_) => {
   } else {
     lastButtonPressWasEquals = true;
     secondNumber = Number(display.textContent);
-    if (operator == "/" && secondNumber == 0) {
-      display.textContent = "NaN";
-      hasDecimalPoint = false;
-      operator == "";
-      return;
-    }
-    display.textContent = getRoundedString(operate(operator, firstNumber, secondNumber));
-    hasDecimalPoint = display.textContent.includes('.');
+    evaluateOperation();
   }
 }
 
