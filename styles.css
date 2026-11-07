@@ -1,6 +1,9 @@
 :root {
   /* Control variables */
-  --calculator-color: rgb(72, 72, 72);
+  --calculator-background-color: rgb(72, 72, 72);
+  --calculator-border-color: rgb(58, 58, 58);
+  --display-background-color: rgb(176, 192, 151);
+  --display-border-color: rgb(135, 147, 115);
   --digit-and-point-button-color: rgb(184, 184, 184);
   --digit-and-point-button-shadow-color: rgb(109, 108, 108);
   --digit-and-point-button-pressed-color: rgb(161, 161, 161);
@@ -44,9 +47,9 @@ body {
   width: var(--calculator-width);
   height: var(--calculator-height);
   padding: var(--calculator-padding);
-  background-color: var(--calculator-color);
+  background-color: var(--calculator-background-color);
   border-radius: 10px;
-  border: 5px, rgb(58, 58, 58), solid;
+  box-shadow: inset -6px -6px 0 var(--calculator-border-color);
 }
 
 #display {
@@ -55,9 +58,9 @@ body {
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-end;
-  border: 4px, rgb(146, 159, 125), solid;
-  border-radius: 2px;
-  background-color: rgb(176, 192, 151);
+  box-shadow: inset 4px 4px 0 var(--display-border-color);
+  border-radius: 6px;
+  background-color: var(--display-background-color);
   font-size: 75px;
   font-family: monospace;
 }
