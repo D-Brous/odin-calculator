@@ -311,7 +311,7 @@ document.addEventListener('keydown', (event) => {
     button.classList.add("pressed");
     button.click();
     if (event.key in operatorToButton) {
-      if (pressedOperator.length > 0) {
+      if (pressedOperator.length > 0 && pressedOperator != event.key) {
         operatorToButton[pressedOperator].classList.remove("pressed");
       }
       pressedOperator = event.key;
