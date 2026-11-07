@@ -63,6 +63,7 @@ body {
   background-color: var(--display-background-color);
   font-size: 75px;
   font-family: monospace;
+  overflow: hidden;
 }
 
 #button-container {

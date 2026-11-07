@@ -1,4 +1,5 @@
 const MAX_DISPLAY_DECIMAL_PLACES = 4;
+const MAX_DISPLAY_CHARS = 10;
 
 const add = (a, b) => a + b;
 const subtract = (a, b) => a - b;
@@ -24,14 +25,34 @@ function getRoundedString(number) {
   if (Number.isInteger(number)) {
     return String(number);
   }
-  // const partials = String(number).split('.');
-  // const integerString = partials[0];
-  // const decimalString = partials[1];
   const numDecimalPlaces = String(number).split('.')[1].length;
   if (numDecimalPlaces <= MAX_DISPLAY_DECIMAL_PLACES) {
     return String(number);
   }
   return number.toFixed(MAX_DISPLAY_DECIMAL_PLACES);
+}
+
+function getScientificNotation(number) {
+  if (number == 0) {
+    return "0e0";
+  }
+  negative = number < 0;
+  if (negative) {
+    number *= -1;
+  }
+  power = 0;
+  while (number >= 10) {
+    number /= 10;
+    power += 1;
+  }
+  while (number < 1) {
+    number *= 10;
+    power -= 1;
+  }
+  if (negative) {
+    return `${getRoundedString(-1 * number)}e${power}`;
+  }
+  return `${getRoundedString(number)}e${power}`;
 }
 
 let firstNumber = 0;
@@ -41,6 +62,7 @@ let lastButtonPressWasOperator = false;
 let lastButtonPressWasEquals = false;
 let hasDecimalPoint = false;
 let pressedOperator = "";
+let currentNumber = 0;
 
 const display = document.querySelector("#display");
 
@@ -51,53 +73,69 @@ function resetPressedOperatorButton() {
   }
 }
 
+function displayNumber() {
+  if (String(currentNumber).length > MAX_DISPLAY_CHARS) {
+    display.textContent = getScientificNotation(currentNumber);
+  } else {
+    display.textContent = getRoundedString(currentNumber);
+  }
+}
+
 function handlePositiveDigitClick(digitString) {
   return (_) => {
     resetPressedOperatorButton();
-    if (display.textContent == "NaN") {
+    if (currentNumber === null) {
       return;
     }
     if (lastButtonPressWasEquals) {
       operator = "";
     }
     if (lastButtonPressWasEquals || lastButtonPressWasOperator) {
+      currentNumber = Number(digitString);
       display.textContent = digitString;
       lastButtonPressWasEquals = false;
       lastButtonPressWasOperator = false;
       hasDecimalPoint = false;
       return;
     }
-    if (display.textContent == "0") {
+    if (currentNumber == 0 && !hasDecimalPoint) {
+      currentNumber = Number(digitString);
       display.textContent = digitString;
     } else {
       display.textContent += digitString;
+      currentNumber = Number(display.textContent);
     }
   }
 }
 
 const handleZeroDigitClick = (_) => {
   resetPressedOperatorButton();
-  if (display.textContent == "NaN") {
+  if (currentNumber === null) {
     return;
   }
   if (lastButtonPressWasEquals) {
     operator = "";
   }
   if (lastButtonPressWasEquals || lastButtonPressWasOperator) {
+    currentNumber = 0;
     display.textContent = "0";
     lastButtonPressWasEquals = false;
     lastButtonPressWasOperator = false;
     hasDecimalPoint = false;
     return;
   }
-  if (display.textContent == "0") {
+  if (currentNumber == 0 && !hasDecimalPoint) {
     return;
   }
   display.textContent += "0";
+  // currentNumber can't just be multiplied by 10 because if the 0 is added 
+  // after a decimal, then currentNumber shouldn't change
+  currentNumber = Number(display.textContent);
 }
 
 const handleClearClick = (_) => {
   resetPressedOperatorButton();
+  currentNumber = 0;
   display.textContent = "0";
   hasDecimalPoint = false;
   lastButtonPressWasEquals = false;
@@ -107,13 +145,14 @@ const handleClearClick = (_) => {
 
 const handleDecimalPointClick = (_) => {
   resetPressedOperatorButton();
-  if (display.textContent == "NaN") {
+  if (currentNumber === null) {
     return
   }
   if (lastButtonPressWasEquals) {
     operator = "";
   }
   if (lastButtonPressWasEquals || lastButtonPressWasOperator) {
+    currentNumber = 0;
     display.textContent = "0.";
     lastButtonPressWasEquals = false;
     lastButtonPressWasOperator = false;
@@ -131,23 +170,28 @@ const handleBackspaceClick = (_) => {
   lastButtonPressWasEquals = false;
   lastButtonPressWasOperator = false;
   if (display.textContent.length == 1) {
+    currentNumber = 0;
     display.textContent = "0";
   } else {
     if (display.textContent.at(-1) == ".") {
       hasDecimalPoint = false;
     }
     display.textContent = display.textContent.slice(0, -1);
+    currentNumber = Number(display.textContent);
   }
 }
 
 function evaluateOperation() {
   if (operator == "/" && secondNumber == 0) {
+    currentNumber = null;
     display.textContent = "NaN";
     hasDecimalPoint = false;
     operator == "";
     return;
   }
-  display.textContent = getRoundedString(operate(operator, firstNumber, secondNumber));
+  currentNumber = operate(operator, firstNumber, secondNumber);
+  displayNumber();
+  // display.textContent = getRoundedString(operate(operator, firstNumber, secondNumber));
   hasDecimalPoint = display.textContent.includes('.');
 }
 
@@ -175,7 +219,7 @@ function handleOperatorClick(operatorString) {
 
 const handleEqualsClick = (_) => {
   resetPressedOperatorButton();
-  if (operator.length == 0) {
+  if (operator.length == 0 || currentNumber === null) {
     return
   } else if (lastButtonPressWasOperator) {
     lastButtonPressWasEquals = true;
