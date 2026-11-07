@@ -1,9 +1,15 @@
 :root {
   /* Control variables */
   --calculator-color: rgb(72, 72, 72);
-  --number-and-point-button-color: rgb(184, 184, 184);
+  --digit-and-point-button-color: rgb(184, 184, 184);
+  --digit-and-point-button-shadow-color: rgb(109, 108, 108);
+  --digit-and-point-button-pressed-color: rgb(161, 161, 161);
   --operator-and-equals-button-color: rgb(140, 64, 191);
+  --operator-and-equals-button-shadow-color: rgb(93, 40, 128);
+  --operator-and-equals-button-pressed-color: rgb(120, 52, 165);
   --backspace-and-clear-button-color: rgb(146, 42, 42);
+  --backspace-and-clear-button-shadow-color: rgb(106, 30, 30);
+  --backspace-and-clear-button-pressed-color: rgb(128, 38, 38);
   --button-container-margin: 20px;
   --calculator-width-to-height-ratio: 0.7;
   --calculator-padding-to-height-ratio: 0.05;
@@ -75,7 +81,14 @@ button {
   box-sizing: border-box;
   font-size: 30px;
   font-family: monospace;
+  border: none;
   border-radius: 6px;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+button:active, button.pressed {
+  transform: translateY(2px); /* Shifting the button down */
+  box-shadow: none;           /* Removing the shadow depth */
 }
 
 #backspace, #clear {
@@ -86,14 +99,29 @@ button {
   flex-basis: var(--equals-button-basis);
 }
 
-#zero, #one, #two, #three, #four, #five, #six, #seven, #eight, #nine, #point {
-  background-color: var(--number-and-point-button-color);
+.digit, .point {
+  background-color: var(--digit-and-point-button-color);
+  box-shadow: inset -5px -5px 0 var(--digit-and-point-button-shadow-color);
 }
 
-#add, #subtract, #multiply, #divide, #equals {
+.digit:active, .point:active {
+  background-color: var(--digit-and-point-button-pressed-color);
+}
+
+.operator, .equals {
   background-color: var(--operator-and-equals-button-color);
+  box-shadow: inset -5px -5px 0 var(--operator-and-equals-button-shadow-color);
 }
 
-#backspace, #clear {
+.operator.pressed, .equals:active {
+  background-color: var(--operator-and-equals-button-pressed-color);
+}
+
+.backspace, .clear {
   background-color: var(--backspace-and-clear-button-color);
+  box-shadow: inset -5px -5px 0 var(--backspace-and-clear-button-shadow-color);
+}
+
+.backspace:active, .clear:active {
+  background-color: var(--backspace-and-clear-button-pressed-color);
 }

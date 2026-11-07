@@ -40,12 +40,20 @@ let operator = "";
 let lastButtonPressWasOperator = false;
 let lastButtonPressWasEquals = false;
 let hasDecimalPoint = false;
+let pressedOperator = "";
 
 const display = document.querySelector("#display");
 
+function resetPressedOperatorButton() {
+  if (pressedOperator.length > 0) {
+    operatorToButton[pressedOperator].classList.remove("pressed");
+    pressedOperator = "";
+  }
+}
 
 function handlePositiveDigitClick(digitString) {
   return (_) => {
+    resetPressedOperatorButton();
     if (display.textContent == "NaN") {
       return;
     }
@@ -68,6 +76,7 @@ function handlePositiveDigitClick(digitString) {
 }
 
 const handleZeroDigitClick = (_) => {
+  resetPressedOperatorButton();
   if (display.textContent == "NaN") {
     return;
   }
@@ -88,6 +97,7 @@ const handleZeroDigitClick = (_) => {
 }
 
 const handleClearClick = (_) => {
+  resetPressedOperatorButton();
   display.textContent = "0";
   hasDecimalPoint = false;
   lastButtonPressWasEquals = false;
@@ -96,6 +106,7 @@ const handleClearClick = (_) => {
 }
 
 const handleDecimalPointClick = (_) => {
+  resetPressedOperatorButton();
   if (display.textContent == "NaN") {
     return
   }
@@ -163,6 +174,7 @@ function handleOperatorClick(operatorString) {
 }
 
 const handleEqualsClick = (_) => {
+  resetPressedOperatorButton();
   if (operator.length == 0) {
     return
   } else if (lastButtonPressWasOperator) {
@@ -206,10 +218,28 @@ document.querySelector("#zero").addEventListener('click', handleZeroDigitClick);
 document.querySelector("#clear").addEventListener('click', handleClearClick);
 document.querySelector("#backspace").addEventListener('click', handleBackspaceClick);
 
-document.querySelector("#add").addEventListener('click', handleOperatorClick("+"));
-document.querySelector("#subtract").addEventListener('click', handleOperatorClick("-"));
-document.querySelector("#multiply").addEventListener('click', handleOperatorClick("*"));
-document.querySelector("#divide").addEventListener('click', handleOperatorClick("/"));
+const addButton = document.querySelector("#add");
+const subtractButton = document.querySelector("#subtract");
+const multiplyButton = document.querySelector("#multiply");
+const divideButton = document.querySelector("#divide");
+
+const operatorToButton = {
+  "+": document.querySelector("#add"),
+  "-": document.querySelector("#subtract"),
+  "*": document.querySelector("#multiply"),
+  "/": document.querySelector("#divide"),
+}
+
+for (const [operator, button] of Object.entries(operatorToButton)) {
+  button.addEventListener('click', handleOperatorClick(operator));
+  button.addEventListener('mousedown', () => {
+    if (pressedOperator.length > 0) {
+      operatorToButton[pressedOperator].classList.remove("pressed");
+    }
+    button.classList.add("pressed");
+    pressedOperator = operator;
+  });
+}
 
 document.querySelector("#equals").addEventListener('click', handleEqualsClick);
 
