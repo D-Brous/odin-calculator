@@ -107,7 +107,7 @@ button:active, button.pressed {
   box-shadow: inset -5px -5px 0 var(--digit-and-point-button-shadow-color);
 }
 
-.digit:active, .point:active {
+.digit:active, .point:active, .digit.pressed, .point.pressed {
   background-color: var(--digit-and-point-button-pressed-color);
 }
 
@@ -116,7 +116,7 @@ button:active, button.pressed {
   box-shadow: inset -5px -5px 0 var(--operator-and-equals-button-shadow-color);
 }
 
-.operator.pressed, .equals:active {
+.operator.pressed, .equals:active, .equals.pressed {
   background-color: var(--operator-and-equals-button-pressed-color);
 }
 
@@ -125,6 +125,6 @@ button:active, button.pressed {
   box-shadow: inset -5px -5px 0 var(--backspace-and-clear-button-shadow-color);
 }
 
-.backspace:active, .clear:active {
+.backspace:active, .clear:active, .backspace.pressed, .clear.pressed {
   background-color: var(--backspace-and-clear-button-pressed-color);
 }

@@ -262,6 +262,16 @@ const keyStringToElementId = {
 
 document.addEventListener('keydown', (event) => {
   if (event.key in keyStringToElementId) {
-    document.querySelector(keyStringToElementId[event.key]).click();
+    const button = document.querySelector(keyStringToElementId[event.key]);
+    button.classList.add("pressed");
+    button.click();
+    if (event.key in operatorToButton) {
+      if (pressedOperator.length > 0) {
+        operatorToButton[pressedOperator].classList.remove("pressed");
+      }
+      pressedOperator = event.key;
+    } else {
+      setTimeout(() => {button.classList.remove("pressed")}, 100);
+    }
   }
 })
