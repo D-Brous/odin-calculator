@@ -258,6 +258,7 @@ const keyStringToElementId = {
   "=": "#equals",
   ".": "#point",
   "Backspace": "#backspace",
+  "Escape": "#clear",
 }
 
 document.addEventListener('keydown', (event) => {
